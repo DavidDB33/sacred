@@ -226,7 +226,7 @@ MODULE_BLACKLIST |= {
     "pickletools",
     "pip",
     "pipes",
-    "pkg_resources",
+    "importlib_resources",
     "pkgutil",
     "platform",
     "plistlib",
@@ -654,7 +654,7 @@ def get_sources_from_modules(module_iterator, base_path, save_git_info):
     return sources
 
 
-def get_dependencies_from_modules(module_iterator, base_path):
+def _get_dependencies_from_modules(module_iterator, base_path):
     dependencies = set()
     for modname, mod in module_iterator:
         # hasattr doesn't work with python extensions
@@ -692,11 +692,11 @@ def get_sources_from_local_dir(globs, base_path, save_git_info):
 
 
 def get_dependencies_from_sys_modules(globs, base_path):
-    return get_dependencies_from_modules(iterate_sys_modules(), base_path)
+    return _get_dependencies_from_modules(iterate_sys_modules(), base_path)
 
 
 def get_dependencies_from_imported_modules(globs, base_path):
-    return get_dependencies_from_modules(iterate_imported_modules(globs), base_path)
+    return _get_dependencies_from_modules(iterate_imported_modules(globs), base_path)
 
 
 def get_dependencies_from_pkg(globs, base_path):
