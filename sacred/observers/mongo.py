@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Optional, Union, cast, TypeVar, Generic, Any
 import mimetypes
 import os.path
 import pickle
@@ -15,13 +15,21 @@ from sacred.observers.base import RunObserver
 from sacred.observers.queue import QueueObserver
 from sacred.serializer import flatten
 from sacred.utils import ObserverError, PathType
-import pkg_resources
+if sys.version_info >= (3, 12, 0):
+    import importlib.resources as importlib_resources
+else:
+    import importlib_resources
 
 DEFAULT_MONGO_PRIORITY = 30
 
+try:
+    import pymongo
+except ImportError:
+    pymongo = None
+
 # This ensures consistent mimetype detection across platforms.
 mimetype_detector = mimetypes.MimeTypes(
-    filenames=[pkg_resources.resource_filename("sacred", "data/mime.types")]
+    filenames=tuple([str(importlib_resources.files("sacred") / "data" / "mime.types")])
 )
 
 
@@ -46,7 +54,7 @@ def force_bson_encodeable(obj):
                 for k, v in obj.items()
             }
 
-    elif opt.has_numpy and isinstance(obj, opt.np.ndarray):
+    elif opt.np is not None and isinstance(obj, opt.np.ndarray):
         return obj
     else:
         try:
@@ -84,7 +92,7 @@ class MongoObserver(RunObserver):
         collection_prefix: str = "",
         overwrite: Optional[Union[int, str]] = None,
         priority: int = DEFAULT_MONGO_PRIORITY,
-        client: Optional["pymongo.MongoClient"] = None,
+        client: Optional["pymongo.MongoClient[dict[str, Any]]"] = None,
         failure_dir: Optional[PathType] = None,
         **kwargs,
     ):
@@ -112,7 +120,6 @@ class MongoObserver(RunObserver):
         failure_dir
             Directory to save the run of a failed observer to.
         """
-        import pymongo
         import gridfs
 
         if client is not None:
@@ -124,7 +131,7 @@ class MongoObserver(RunObserver):
             if url is not None:
                 raise ValueError("Cannot pass both a client and a url.")
         else:
-            client = pymongo.MongoClient(url, **kwargs)
+            client:pymongo.MongoClient[dict[str, Any]] = pymongo.MongoClient(url, **kwargs)
 
         self._client = client
         database = client[db_name]
@@ -186,7 +193,7 @@ class MongoObserver(RunObserver):
         self.fs = fs
         if overwrite is not None:
             overwrite = int(overwrite)
-            run = self.runs.find_one({"_id": overwrite})
+            run:dict|None = cast(dict|None, self.runs.find_one({"_id": overwrite}))
             if run is None:
                 raise RuntimeError(
                     "Couldn't find run to overwrite with " "_id='{}'".format(overwrite)
@@ -260,11 +267,12 @@ class MongoObserver(RunObserver):
         return self.run_entry["_id"]
 
     def heartbeat_event(self, info, captured_out, beat_time, result):
-        self.run_entry["info"] = flatten(info)
-        self.run_entry["captured_out"] = captured_out
-        self.run_entry["heartbeat"] = beat_time
-        self.run_entry["result"] = flatten(result)
-        self.save()
+        if self.run_entry is not None:
+            self.run_entry["info"] = flatten(info)
+            self.run_entry["captured_out"] = captured_out
+            self.run_entry["heartbeat"] = beat_time
+            self.run_entry["result"] = flatten(result)
+            self.save()
 
     def completed_event(self, stop_time, result):
         self.run_entry["stop_time"] = stop_time
