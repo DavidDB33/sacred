@@ -27,7 +27,7 @@ scikit-learn
 pymongo
 py-cpuinfo
 boto3
-moto
+moto<5.0.0
 google-compute-engine
 google-cloud-storage
 pre-commit
