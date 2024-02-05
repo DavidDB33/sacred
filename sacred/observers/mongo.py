@@ -10,11 +10,10 @@ import warnings
 
 import sacred.optional as opt
 from sacred.commandline_options import cli_option
-from sacred.dependencies import get_digest
 from sacred.observers.base import RunObserver
 from sacred.observers.queue import QueueObserver
 from sacred.serializer import flatten
-from sacred.utils import ObserverError, PathType
+from sacred.utils import ObserverError, PathType, get_digest
 if sys.version_info >= (3, 12, 0):
     import importlib.resources as importlib_resources
 else:
@@ -121,6 +120,7 @@ class MongoObserver(RunObserver):
             Directory to save the run of a failed observer to.
         """
         import gridfs
+        import pymongo
 
         if client is not None:
             if not isinstance(client, pymongo.MongoClient):

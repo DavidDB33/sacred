@@ -11,11 +11,10 @@ import warnings
 from shutil import copyfile, SameFileError
 
 from sacred.commandline_options import cli_option
-from sacred.dependencies import get_digest
 from sacred.observers.base import RunObserver
 from sacred import optional as opt
 from sacred.serializer import flatten
-from sacred.utils import PathType
+from sacred.utils import PathType, get_digest
 
 
 DEFAULT_FILE_STORAGE_PRIORITY = 20

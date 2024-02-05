@@ -2,10 +2,12 @@
 # coding=utf-8
 
 import collections
+import collections.abc
 import contextlib
+import hashlib
 import importlib
+import importlib.util
 import logging
-import pkgutil
 import re
 import shlex
 import sys
@@ -46,6 +48,7 @@ __all__ = [
     "PathType",
 ]
 
+MB = 1048576
 NO_LOGGER = logging.getLogger("ignore")
 NO_LOGGER.disabled = True
 
@@ -674,7 +677,7 @@ def apply_backspaces_and_linefeeds(text):
 def module_exists(modname):
     """Checks if a module exists without actually importing it."""
     try:
-        return pkgutil.find_loader(modname) is not None
+        return importlib.util.find_spec(modname) is not None
     except ImportError:
         # TODO: Temporary fix for tf 1.14.0.
         # Should be removed once fixed in tf.
@@ -716,6 +719,17 @@ def ensure_wellformed_argv(argv):
                 "following elements: {}".format(problems)
             )
     return argv
+
+
+def get_digest(filename):
+    """Compute the MD5 hash for a given file."""
+    h = hashlib.md5()
+    with open(filename, "rb") as f:
+        data = f.read(1 * MB)
+        while data:
+            h.update(data)
+            data = f.read(1 * MB)
+        return h.hexdigest()
 
 
 class IntervalTimer(threading.Thread):

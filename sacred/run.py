@@ -289,7 +289,7 @@ class Run:
 
     def _emit_queued(self):
         self.status = "QUEUED"
-        queue_time = datetime.datetime.utcnow()
+        queue_time = datetime.datetime.now(datetime.UTC)
         self.meta_info["queue_time"] = queue_time
         command = join_paths(
             self.main_function.prefix, self.main_function.signature.name
@@ -317,7 +317,7 @@ class Run:
 
     def _emit_started(self):
         self.status = "RUNNING"
-        self.start_time = datetime.datetime.utcnow()
+        self.start_time = datetime.datetime.now(datetime.UTC)
         command = join_paths(
             self.main_function.prefix, self.main_function.signature.name
         )
@@ -342,7 +342,7 @@ class Run:
             self.run_logger.info('Started run with ID "{}"'.format(self._id))
 
     def _emit_heartbeat(self):
-        beat_time = datetime.datetime.utcnow()
+        beat_time = datetime.datetime.now(datetime.UTC)
         self._get_captured_output()
         # Read all measured metrics since last heartbeat
         logged_metrics = self._metrics.get_last_metrics()
@@ -361,7 +361,7 @@ class Run:
             )
 
     def _stop_time(self):
-        self.stop_time = datetime.datetime.utcnow()
+        self.stop_time = datetime.datetime.now(datetime.UTC)
         elapsed_time = datetime.timedelta(
             seconds=round((self.stop_time - self.start_time).total_seconds())
         )
@@ -416,8 +416,9 @@ class Run:
 
     def _safe_call(self, obs, method, **kwargs):
         if obs not in self._failed_observers:
+            func = getattr(obs, method)
             try:
-                getattr(obs, method)(**kwargs)
+                func(**kwargs)
             except Exception as e:
                 self._failed_observers.append(obs)
                 self.run_logger.warning(

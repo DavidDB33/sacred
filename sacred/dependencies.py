@@ -2,7 +2,6 @@
 # coding=utf-8
 
 import functools
-import hashlib
 import os.path
 import re
 import sys
@@ -12,9 +11,8 @@ import pkg_resources
 
 import sacred.optional as opt
 from sacred import SETTINGS
-from sacred.utils import iter_prefixes
+from sacred.utils import iter_prefixes, get_digest
 
-MB = 1048576
 MODULE_BLACKLIST = set(sys.builtin_module_names)
 # sadly many builtins are missing from the above, so we list them manually:
 MODULE_BLACKLIST |= {
@@ -386,17 +384,6 @@ def get_py_file_if_possible(pyc_name):
     return pyc_name
 
 
-def get_digest(filename):
-    """Compute the MD5 hash for a given file."""
-    h = hashlib.md5()
-    with open(filename, "rb") as f:
-        data = f.read(1 * MB)
-        while data:
-            h.update(data)
-            data = f.read(1 * MB)
-        return h.hexdigest()
-
-
 def get_commit_if_possible(filename, save_git_info):
     """Try to retrieve VCS information for a given file.
 
@@ -631,7 +618,6 @@ def iterate_all_python_files(base_path):
         for filename in filelist:
             if filename.endswith(".py"):
                 yield os.path.join(base_path, dirname, filename)
-
 
 def iterate_sys_modules():
     items = list(sys.modules.items())

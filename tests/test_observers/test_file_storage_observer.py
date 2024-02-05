@@ -51,7 +51,7 @@ def test_fs_observer_queued_event_creates_rundir(dir_obs, sample_run):
         sample_run["ex_info"],
         sample_run["command"],
         sample_run["host_info"],
-        datetime.datetime.utcnow(),
+        datetime.datetime.now(datetime.UTC),
         sample_run["config"],
         sample_run["meta_info"],
         sample_run["_id"],
@@ -311,15 +311,15 @@ def test_fs_observer_equality(dir_obs):
 @pytest.fixture
 def logged_metrics():
     return [
-        ScalarMetricLogEntry("training.loss", 10, datetime.datetime.utcnow(), 1),
-        ScalarMetricLogEntry("training.loss", 20, datetime.datetime.utcnow(), 2),
-        ScalarMetricLogEntry("training.loss", 30, datetime.datetime.utcnow(), 3),
-        ScalarMetricLogEntry("training.accuracy", 10, datetime.datetime.utcnow(), 100),
-        ScalarMetricLogEntry("training.accuracy", 20, datetime.datetime.utcnow(), 200),
-        ScalarMetricLogEntry("training.accuracy", 30, datetime.datetime.utcnow(), 300),
-        ScalarMetricLogEntry("training.loss", 40, datetime.datetime.utcnow(), 10),
-        ScalarMetricLogEntry("training.loss", 50, datetime.datetime.utcnow(), 20),
-        ScalarMetricLogEntry("training.loss", 60, datetime.datetime.utcnow(), 30),
+        ScalarMetricLogEntry("training.loss", 10, datetime.datetime.now(datetime.UTC), 1),
+        ScalarMetricLogEntry("training.loss", 20, datetime.datetime.now(datetime.UTC), 2),
+        ScalarMetricLogEntry("training.loss", 30, datetime.datetime.now(datetime.UTC), 3),
+        ScalarMetricLogEntry("training.accuracy", 10, datetime.datetime.now(datetime.UTC), 100),
+        ScalarMetricLogEntry("training.accuracy", 20, datetime.datetime.now(datetime.UTC), 200),
+        ScalarMetricLogEntry("training.accuracy", 30, datetime.datetime.now(datetime.UTC), 300),
+        ScalarMetricLogEntry("training.loss", 40, datetime.datetime.now(datetime.UTC), 10),
+        ScalarMetricLogEntry("training.loss", 50, datetime.datetime.now(datetime.UTC), 20),
+        ScalarMetricLogEntry("training.loss", 60, datetime.datetime.now(datetime.UTC), 30),
     ]
 
 

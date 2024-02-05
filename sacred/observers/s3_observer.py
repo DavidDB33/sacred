@@ -3,9 +3,9 @@ import os
 import os.path
 
 from sacred.commandline_options import cli_option
-from sacred.dependencies import get_digest
 from sacred.observers.base import RunObserver
 from sacred.serializer import flatten
+from sacred.utils import get_digest
 import re
 import socket
 

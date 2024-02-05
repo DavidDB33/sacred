@@ -5,10 +5,9 @@ import re
 from typing import Optional
 
 from sacred.commandline_options import cli_option
-from sacred.dependencies import get_digest
 from sacred.observers.base import RunObserver
 from sacred.serializer import flatten
-from sacred.utils import PathType
+from sacred.utils import PathType, get_digest
 
 DEFAULT_GCS_PRIORITY = 20
 

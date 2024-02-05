@@ -4,12 +4,12 @@ import mock
 import pytest
 import sys
 
-if sys.version_info >= (3, 10):
-    pytest.skip(
-        "Skip pymongo tests for Python 3.10 because mongomock doesn't "
-        "support Python 3.10",
-        allow_module_level=True,
-    )
+# if sys.version_info >= (3, 10):
+#     pytest.skip(
+#         "Skip pymongo tests for Python 3.10 because mongomock doesn't "
+#         "support Python 3.10",
+#         allow_module_level=True,
+#     )
 
 from sacred.metrics_logger import ScalarMetricLogEntry, linearize_metrics
 
@@ -199,15 +199,15 @@ def test_mongo_observer_resource_event(mongo_obs, sample_run):
 @pytest.fixture
 def logged_metrics():
     return [
-        ScalarMetricLogEntry("training.loss", 10, datetime.datetime.utcnow(), 1),
-        ScalarMetricLogEntry("training.loss", 20, datetime.datetime.utcnow(), 2),
-        ScalarMetricLogEntry("training.loss", 30, datetime.datetime.utcnow(), 3),
-        ScalarMetricLogEntry("training.accuracy", 10, datetime.datetime.utcnow(), 100),
-        ScalarMetricLogEntry("training.accuracy", 20, datetime.datetime.utcnow(), 200),
-        ScalarMetricLogEntry("training.accuracy", 30, datetime.datetime.utcnow(), 300),
-        ScalarMetricLogEntry("training.loss", 40, datetime.datetime.utcnow(), 10),
-        ScalarMetricLogEntry("training.loss", 50, datetime.datetime.utcnow(), 20),
-        ScalarMetricLogEntry("training.loss", 60, datetime.datetime.utcnow(), 30),
+        ScalarMetricLogEntry("training.loss", 10, datetime.datetime.now(datetime.UTC), 1),
+        ScalarMetricLogEntry("training.loss", 20, datetime.datetime.now(datetime.UTC), 2),
+        ScalarMetricLogEntry("training.loss", 30, datetime.datetime.now(datetime.UTC), 3),
+        ScalarMetricLogEntry("training.accuracy", 10, datetime.datetime.now(datetime.UTC), 100),
+        ScalarMetricLogEntry("training.accuracy", 20, datetime.datetime.now(datetime.UTC), 200),
+        ScalarMetricLogEntry("training.accuracy", 30, datetime.datetime.now(datetime.UTC), 300),
+        ScalarMetricLogEntry("training.loss", 40, datetime.datetime.now(datetime.UTC), 10),
+        ScalarMetricLogEntry("training.loss", 50, datetime.datetime.now(datetime.UTC), 20),
+        ScalarMetricLogEntry("training.loss", 60, datetime.datetime.now(datetime.UTC), 30),
     ]
 
 

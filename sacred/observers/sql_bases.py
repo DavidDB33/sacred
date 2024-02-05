@@ -5,8 +5,8 @@ import os
 import sqlalchemy as sa
 from sqlalchemy.ext.declarative import declarative_base
 
-from sacred.dependencies import get_digest
 from sacred.serializer import restore
+from sacred.utils import get_digest
 
 
 Base = declarative_base()

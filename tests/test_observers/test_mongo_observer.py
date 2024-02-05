@@ -6,12 +6,12 @@ from glob import glob
 import mock
 import pytest
 
-if sys.version_info >= (3, 10):
-    pytest.skip(
-        "Skip pymongo tests for Python 3.10 because mongomock doesn't "
-        "support Python 3.10",
-        allow_module_level=True,
-    )
+# if sys.version_info >= (3, 10):
+#     pytest.skip(
+#         "Skip pymongo tests for Python 3.10 because mongomock doesn't "
+#         "support Python 3.10",
+#         allow_module_level=True,
+#     )
 
 from sacred.metrics_logger import ScalarMetricLogEntry, linearize_metrics
 
@@ -24,8 +24,8 @@ from mongomock.gridfs import enable_gridfs_integration
 enable_gridfs_integration()
 from .failing_mongo_mock import FailingMongoClient
 
-from sacred.dependencies import get_digest
 from sacred.observers.mongo import MongoObserver, force_bson_encodeable
+from sacred.utils import get_digest
 
 T1 = datetime.datetime(1999, 5, 4, 3, 2, 1)
 T2 = datetime.datetime(1999, 5, 5, 5, 5, 5)
@@ -281,7 +281,7 @@ def test_force_bson_encodable_doesnt_change_valid_document():
         "list": ["a", 1, True],
         "bool": True,
         "cr4zy: _but_ [legal) Key!": "$illegal.key.as.value",
-        "datetime": datetime.datetime.utcnow(),
+        "datetime": datetime.datetime.now(datetime.UTC),
         "tuple": (1, 2.0, "three"),
         "none": None,
     }
@@ -311,15 +311,15 @@ def test_force_bson_encodable_substitutes_illegal_value_with_strings():
 @pytest.fixture
 def logged_metrics():
     return [
-        ScalarMetricLogEntry("training.loss", 10, datetime.datetime.utcnow(), 1),
-        ScalarMetricLogEntry("training.loss", 20, datetime.datetime.utcnow(), 2),
-        ScalarMetricLogEntry("training.loss", 30, datetime.datetime.utcnow(), 3),
-        ScalarMetricLogEntry("training.accuracy", 10, datetime.datetime.utcnow(), 100),
-        ScalarMetricLogEntry("training.accuracy", 20, datetime.datetime.utcnow(), 200),
-        ScalarMetricLogEntry("training.accuracy", 30, datetime.datetime.utcnow(), 300),
-        ScalarMetricLogEntry("training.loss", 40, datetime.datetime.utcnow(), 10),
-        ScalarMetricLogEntry("training.loss", 50, datetime.datetime.utcnow(), 20),
-        ScalarMetricLogEntry("training.loss", 60, datetime.datetime.utcnow(), 30),
+        ScalarMetricLogEntry("training.loss", 10, datetime.datetime.now(datetime.UTC), 1),
+        ScalarMetricLogEntry("training.loss", 20, datetime.datetime.now(datetime.UTC), 2),
+        ScalarMetricLogEntry("training.loss", 30, datetime.datetime.now(datetime.UTC), 3),
+        ScalarMetricLogEntry("training.accuracy", 10, datetime.datetime.now(datetime.UTC), 100),
+        ScalarMetricLogEntry("training.accuracy", 20, datetime.datetime.now(datetime.UTC), 200),
+        ScalarMetricLogEntry("training.accuracy", 30, datetime.datetime.now(datetime.UTC), 300),
+        ScalarMetricLogEntry("training.loss", 40, datetime.datetime.now(datetime.UTC), 10),
+        ScalarMetricLogEntry("training.loss", 50, datetime.datetime.now(datetime.UTC), 20),
+        ScalarMetricLogEntry("training.loss", 60, datetime.datetime.now(datetime.UTC), 30),
     ]
 
 

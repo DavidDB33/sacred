@@ -45,7 +45,7 @@ class MetricsLogger:
         if step is None:
             step = self._metric_step_counter.get(metric_name, -1) + 1
         self._logged_metrics.put(
-            ScalarMetricLogEntry(metric_name, step, datetime.datetime.utcnow(), value)
+            ScalarMetricLogEntry(metric_name, step, datetime.datetime.now(datetime.UTC), value)
         )
         self._metric_step_counter[metric_name] = step
 

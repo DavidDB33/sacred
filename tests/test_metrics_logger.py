@@ -116,12 +116,12 @@ def test_log_scalar_metrics_with_implicit_step(ex):
 
 def test_linearize_metrics():
     entries = [
-        ScalarMetricLogEntry("training.loss", 10, datetime.datetime.utcnow(), 100),
-        ScalarMetricLogEntry("training.accuracy", 5, datetime.datetime.utcnow(), 50),
-        ScalarMetricLogEntry("training.loss", 20, datetime.datetime.utcnow(), 200),
-        ScalarMetricLogEntry("training.accuracy", 10, datetime.datetime.utcnow(), 100),
-        ScalarMetricLogEntry("training.accuracy", 15, datetime.datetime.utcnow(), 150),
-        ScalarMetricLogEntry("training.accuracy", 30, datetime.datetime.utcnow(), 300),
+        ScalarMetricLogEntry("training.loss", 10, datetime.datetime.now(datetime.UTC), 100),
+        ScalarMetricLogEntry("training.accuracy", 5, datetime.datetime.now(datetime.UTC), 50),
+        ScalarMetricLogEntry("training.loss", 20, datetime.datetime.now(datetime.UTC), 200),
+        ScalarMetricLogEntry("training.accuracy", 10, datetime.datetime.now(datetime.UTC), 100),
+        ScalarMetricLogEntry("training.accuracy", 15, datetime.datetime.now(datetime.UTC), 150),
+        ScalarMetricLogEntry("training.accuracy", 30, datetime.datetime.now(datetime.UTC), 300),
     ]
     linearized = linearize_metrics(entries)
     assert type(linearized) == dict
