@@ -47,7 +47,7 @@ __all__ = [
 ]
 
 NO_LOGGER = logging.getLogger("ignore")
-NO_LOGGER.disabled = 1
+NO_LOGGER.disabled = True
 
 PATHCHANGE = object()
 
