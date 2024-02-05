@@ -424,6 +424,10 @@ class Run:
                 self.run_logger.warning(
                     "An error ocurred in the '{}' " "observer: {}".format(obs, e)
                 )
+                print((f"ERROR IN _safe_call\n"
+                       f"Function: {func}\n"
+                       f"Kwargs: {kwargs}\n\n\n"), file=sys.stderr)
+                raise
 
     def _final_call(self, observer, method, **kwargs):
         try:
